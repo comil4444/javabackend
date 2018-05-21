@@ -18,4 +18,6 @@ public interface CategoryMapper {
     int updateByPrimaryKey(Category record);
 
 	Set<Category> fetchChildCategory(Integer parentId);
+
+	Set<Category> fetchDeepChildCategory(Integer parentId);
 }
