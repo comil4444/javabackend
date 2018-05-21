@@ -1,5 +1,7 @@
 package com.cn.eric.backend.dao;
 
+import java.util.Set;
+
 import com.cn.eric.backend.pojo.Category;
 
 public interface CategoryMapper {
@@ -14,4 +16,6 @@ public interface CategoryMapper {
     int updateByPrimaryKeySelective(Category record);
 
     int updateByPrimaryKey(Category record);
+
+	Set<Category> fetchChildCategory(Integer parentId);
 }
