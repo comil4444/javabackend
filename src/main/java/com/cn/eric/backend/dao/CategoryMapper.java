@@ -19,5 +19,4 @@ public interface CategoryMapper {
 
 	Set<Category> fetchChildCategory(Integer parentId);
 
-	Set<Category> fetchDeepChildCategory(Integer parentId);
 }

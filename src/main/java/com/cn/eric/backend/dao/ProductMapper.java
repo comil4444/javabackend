@@ -1,5 +1,7 @@
 package com.cn.eric.backend.dao;
 
+import java.util.List;
+
 import com.cn.eric.backend.pojo.Product;
 
 public interface ProductMapper {
@@ -14,4 +16,8 @@ public interface ProductMapper {
     int updateByPrimaryKeySelective(Product record);
 
     int updateByPrimaryKey(Product record);
+    
+    List<Product> selectProducts();
+
+	List<Product> selectProductsByVagueName(String productName);
 }

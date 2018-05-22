@@ -12,4 +12,6 @@ public interface CategoryService {
 
 	ServerResponse fetchDeepChildCategory(Integer parentId);
 
+	ServerResponse getCategoryById(Integer categoryId);
+
 }

@@ -84,6 +84,18 @@ public class CategoryServiceImpl implements CategoryService {
 		
 	}
 	
+	
+	@Override
+	public ServerResponse getCategoryById(Integer categoryId) {
+		if(categoryId<0)
+			return ServerResponse.createErrorResponseByCode(ResponseCode.ILLEGAL_PARAM);
+		Category category = categoryMapper.selectByPrimaryKey(categoryId);
+		if(null==category)
+			return ServerResponse.createErrorResponseByMsg("查询数据失败！");
+		return ServerResponse.createSuccessResponseByData(category);
+	}
+	
+	
 	private void __fetchDeepChildCategory(Set<Category> set,int parentId) {
 		Set<Category> categories = categoryMapper.fetchChildCategory(parentId);
 		set.addAll(categories);
@@ -93,6 +105,7 @@ public class CategoryServiceImpl implements CategoryService {
 			}
 		}
 	}
+
 	
 	
 

@@ -25,6 +25,16 @@ public class CategoryAdminController {
 	@Autowired
 	private UserService userService;
 	
+	@RequestMapping(value = "get_category",method=RequestMethod.POST)
+	@ResponseBody
+	public ServerResponse getCategory(HttpSession session, Integer categoryId) {
+		User user = (User)session.getAttribute(Constant.CURRENTUSER);
+		if(null==user||!userService.checkAdminPermission(user)) {
+			return ServerResponse.createErrorResponseByMsg("需要管理员！");
+		}
+		return categoryService.getCategoryById(categoryId);
+	}
+	
 	@RequestMapping(value = "add_category",method=RequestMethod.POST)
 	@ResponseBody
 	public ServerResponse addCategory(HttpSession session, String categoryName, @RequestParam(value = "parentId",defaultValue="0")Integer parentId) {
