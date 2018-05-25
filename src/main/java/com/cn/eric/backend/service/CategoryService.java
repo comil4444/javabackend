@@ -1,5 +1,7 @@
 package com.cn.eric.backend.service;
 
+import java.util.List;
+
 import com.cn.eric.backend.common.ServerResponse;
 
 public interface CategoryService {
@@ -8,9 +10,9 @@ public interface CategoryService {
 
 	ServerResponse updateCategory(String categoryName, Integer categoryId);
 
-	ServerResponse fetchChildCategory(Integer parentId);
+	ServerResponse<List<Integer>> fetchChildCategory(Integer parentId);
 
-	ServerResponse fetchDeepChildCategory(Integer parentId);
+	ServerResponse<List<Integer>> fetchDeepChildCategory(Integer parentId);
 
 	ServerResponse getCategoryById(Integer categoryId);
 

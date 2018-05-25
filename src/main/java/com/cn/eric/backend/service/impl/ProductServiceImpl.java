@@ -8,12 +8,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cn.eric.backend.common.Constant;
 import com.cn.eric.backend.common.ResponseCode;
 import com.cn.eric.backend.common.ServerResponse;
 import com.cn.eric.backend.dao.CategoryMapper;
 import com.cn.eric.backend.dao.ProductMapper;
 import com.cn.eric.backend.pojo.Category;
 import com.cn.eric.backend.pojo.Product;
+import com.cn.eric.backend.service.CategoryService;
 import com.cn.eric.backend.service.ProductService;
 import com.cn.eric.backend.util.DateUtil;
 import com.cn.eric.backend.util.PropertiesUtil;
@@ -21,6 +23,7 @@ import com.cn.eric.backend.vo.ProductDetailVO;
 import com.cn.eric.backend.vo.ProductListVO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -30,6 +33,9 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Autowired
 	private CategoryMapper categoryMapper;
+	
+	@Autowired
+	private CategoryService categoryService;
 	
 	@Override
 	public ServerResponse saveOrUpdatePro(Product product) {
@@ -160,6 +166,55 @@ public class ProductServiceImpl implements ProductService {
 			List<Product> pros = productMapper.selectProductsByVagueName(productName);
 		}
 		return null;
+	}
+
+	@Override
+	public ServerResponse<ProductDetailVO> getProductOnSaleDetail(int productId) {
+		Product prod = productMapper.selectByPrimaryKey(productId);
+		if(prod==null||!(prod.getStatus()==Constant.ProductStatus.ON_SALE.getCode())) {
+			return ServerResponse.createErrorResponseByMsg("产品不存在或已经下架！");
+		}
+		ProductDetailVO vo = productWrapper(prod);
+		return ServerResponse.createSuccessResponseByData(vo);
+	}
+
+	@Override
+	public ServerResponse<PageInfo> getProductListByCategoryKeyword(String keyword, Integer categoryId, int pageNum,
+			int pageSize,String orderBy) {
+		PageHelper.startPage(pageNum, pageSize);
+		if(StringUtils.isBlank(keyword)||null==categoryId)
+			return ServerResponse.createErrorResponseByCode(ResponseCode.ILLEGAL_PARAM);
+		List<Integer> categoryIds = new ArrayList<Integer>();
+		if(null!=categoryId) {
+			Category category = categoryMapper.selectByPrimaryKey(categoryId);
+			//如果分类为空说明没有该分类，不是错误，只是空集合返回即可
+			if(null==category) {
+				List<ProductDetailVO> list = new ArrayList<ProductDetailVO>();
+				PageInfo pageInfo = new PageInfo(list);
+				return ServerResponse.createSuccessResponseByData(pageInfo);
+			}
+			categoryIds = categoryService.fetchDeepChildCategory(categoryId).getData();
+		}
+		if(StringUtils.isNotBlank(keyword)) {
+			keyword = new StringBuilder().append("%").append(keyword).append("%").toString();
+		}
+
+		if(StringUtils.isNotBlank(orderBy)) {
+			if(Constant.OrderBy.ORDER_BY.contains(orderBy)) {
+				String[] temp = orderBy.split("_");
+				PageHelper.orderBy(temp[0]+" "+temp[1]);
+			}
+		}
+		
+		List<Product> products = productMapper.selectProductsByKeyCategoryIds(keyword,categoryIds);
+		PageInfo pageInfo = new PageInfo(products);
+		
+		List<ProductDetailVO> target = Lists.newArrayList();
+		for(Product pro:products) {
+			target.add(productWrapper(pro));
+		}
+		pageInfo.setList(target);
+		return ServerResponse.createSuccessResponseByData(pageInfo);
 	}
 
 

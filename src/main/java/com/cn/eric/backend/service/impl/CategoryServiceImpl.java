@@ -1,6 +1,7 @@
 package com.cn.eric.backend.service.impl;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -55,7 +56,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public ServerResponse fetchChildCategory(Integer parentId) {
+	public ServerResponse<List<Integer>> fetchChildCategory(Integer parentId) {
 		if(parentId<0)
 			return ServerResponse.createErrorResponseByCode(ResponseCode.ILLEGAL_PARAM);
 		Set<Category> categories = categoryMapper.fetchChildCategory(parentId);
@@ -69,7 +70,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public ServerResponse fetchDeepChildCategory(Integer parentId) {
+	public ServerResponse<List<Integer>> fetchDeepChildCategory(Integer parentId) {
 		if(parentId<0)
 			return ServerResponse.createErrorResponseByCode(ResponseCode.ILLEGAL_PARAM);
 		Set<Category> categories = new HashSet<Category>();
