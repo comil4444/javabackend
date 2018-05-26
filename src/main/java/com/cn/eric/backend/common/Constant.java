@@ -14,6 +14,14 @@ public interface Constant {
 		int USER = 0;
 	}
 	
+	public interface Cart{
+		String LIMIT_NUM_SUCCESS = "LIMIT_NUM_SUCCESS";
+		String UN_LIMIT_NUM_SUCCESS = "UN_LIMIT_NUM_SUCCESS";
+		
+		int CHECKED = 1;
+		int UN_CHECKED = 1;
+	}
+	
 	public interface OrderBy{
 		Set ORDER_BY = Sets.newHashSet("price_desc","price_asc");
 	}

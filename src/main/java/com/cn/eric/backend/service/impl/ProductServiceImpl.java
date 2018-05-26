@@ -217,5 +217,20 @@ public class ProductServiceImpl implements ProductService {
 		return ServerResponse.createSuccessResponseByData(pageInfo);
 	}
 
+	public CategoryMapper getCategoryMapper() {
+		return categoryMapper;
+	}
 
+	public void setCategoryMapper(CategoryMapper categoryMapper) {
+		this.categoryMapper = categoryMapper;
+	}
+
+	public CategoryService getCategoryService() {
+		return categoryService;
+	}
+
+	public void setCategoryService(CategoryService categoryService) {
+		this.categoryService = categoryService;
+	}
+	
 }

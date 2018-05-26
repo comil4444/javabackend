@@ -33,6 +33,14 @@ public class ProductController {
 			@RequestParam(value="orderBy",defaultValue="")String orderBy){
 		return productService.getProductListByCategoryKeyword(keyword,categoryId,pageNum,pageSize,orderBy);
 	}
+
+	public ProductService getProductService() {
+		return productService;
+	}
+
+	public void setProductService(ProductService productService) {
+		this.productService = productService;
+	}
 	
 	
 }
