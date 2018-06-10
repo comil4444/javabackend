@@ -1,6 +1,7 @@
 package com.cn.eric.backend.dao;
 
 import java.util.List;
+import java.util.Set;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -23,5 +24,5 @@ public interface ProductMapper {
 
 	List<Product> selectProductsByVagueName(String productName);
 
-	List<Product> selectProductsByKeyCategoryIds(@Param("keyword") String keyword, @Param("categoryIds") List<Integer> categoryIds);
+	List<Product> selectProductsByKeyCategoryIds(@Param("keyword") String keyword, @Param("categoryIds") Set<Integer> categoryIds);
 }

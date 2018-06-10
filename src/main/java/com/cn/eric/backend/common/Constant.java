@@ -54,5 +54,13 @@ public interface Constant {
 		public void setCode(int code) {
 			this.code = code;
 		}
+		
+		public static boolean contains(int code) {
+			for(ProductStatus ps:ProductStatus.values()) {
+				if(ps.getCode()==code)
+					return true;
+			}
+			return false;
+		}
 	}
 }

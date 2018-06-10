@@ -12,7 +12,7 @@ import com.cn.eric.backend.vo.ProductDetailVO;
 import com.github.pagehelper.PageInfo;
 
 @Controller
-@RequestMapping("/product/")
+@RequestMapping("/product")
 public class ProductController {
 	
 	@Autowired
@@ -24,10 +24,10 @@ public class ProductController {
 		return productService.getProductOnSaleDetail(productId);
 	}
 
-	@RequestMapping("detail.do")
+	@RequestMapping("list.do")
 	@ResponseBody
 	public ServerResponse<PageInfo> list(@RequestParam(value="keyword",required=false)String keyword,
-			@RequestParam(value="categoryId",required=false)int categoryId,
+			@RequestParam(value="categoryId",required=false)Integer categoryId,
 			@RequestParam(value="pageNum",defaultValue="1")int pageNum,
 			@RequestParam(value="pageSize",defaultValue="10")int pageSize,
 			@RequestParam(value="orderBy",defaultValue="")String orderBy){

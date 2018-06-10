@@ -1,7 +1,9 @@
 package com.cn.eric.backend.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -39,7 +41,7 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Override
 	public ServerResponse saveOrUpdatePro(Product product) {
-		if(null==product) {
+		if(null!=product) {
 			if(StringUtils.isNotBlank(product.getSubImages())){
 				
 				//Front End need to combine using comma
@@ -49,6 +51,7 @@ public class ProductServiceImpl implements ProductService {
 				
 				//insert
 				if(null == product.getId()) {
+					product.setStatus(Constant.ProductStatus.ON_SALE.getCode());
 					int count = productMapper.insert(product);
 					if(count==0)
 						return ServerResponse.createErrorResponseByMsg("插入新商品失败！");
@@ -68,8 +71,9 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public ServerResponse updateProStatus(Integer productId, Integer status) {
-		if(null==productId||null==status)
+		if(null==productId||null==status||!Constant.ProductStatus.contains(status))
 			return ServerResponse.createErrorResponseByCode(ResponseCode.ILLEGAL_PARAM);
+		
 		Product pro = new Product();
 		pro.setId(productId);
 		pro.setStatus(status);
@@ -163,7 +167,10 @@ public class ProductServiceImpl implements ProductService {
 			return ServerResponse.createSuccessResponseByData(pageInfo);
 		}else if(null!=productName) {
 			PageHelper.startPage(pageNum,pageSize);
+			productName = new StringBuffer().append("%").append(productName).append("%").toString();
 			List<Product> pros = productMapper.selectProductsByVagueName(productName);
+			PageInfo pageInfo = new PageInfo(pros);
+			return ServerResponse.createSuccessResponseByData(pageInfo);
 		}
 		return null;
 	}
@@ -182,9 +189,7 @@ public class ProductServiceImpl implements ProductService {
 	public ServerResponse<PageInfo> getProductListByCategoryKeyword(String keyword, Integer categoryId, int pageNum,
 			int pageSize,String orderBy) {
 		PageHelper.startPage(pageNum, pageSize);
-		if(StringUtils.isBlank(keyword)||null==categoryId)
-			return ServerResponse.createErrorResponseByCode(ResponseCode.ILLEGAL_PARAM);
-		List<Integer> categoryIds = new ArrayList<Integer>();
+		Set<Integer> categoryIds = new HashSet<Integer>();
 		if(null!=categoryId) {
 			Category category = categoryMapper.selectByPrimaryKey(categoryId);
 			//如果分类为空说明没有该分类，不是错误，只是空集合返回即可
@@ -197,6 +202,8 @@ public class ProductServiceImpl implements ProductService {
 		}
 		if(StringUtils.isNotBlank(keyword)) {
 			keyword = new StringBuilder().append("%").append(keyword).append("%").toString();
+		}else {
+			keyword = null;
 		}
 
 		if(StringUtils.isNotBlank(orderBy)) {

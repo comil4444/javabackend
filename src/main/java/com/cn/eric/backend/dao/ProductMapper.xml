@@ -202,8 +202,7 @@
 		select
 		<include refid="Base_Column_List" />
 		from mmall_product
-		where name like CONCAT(CONCAT('%', #{productName}),
-		'%')
+		where name like #{productName}
 	</select>
 
 	<select id="selectProductsByKeyCategoryIds" resultMap="BaseResultMap"
@@ -215,7 +214,7 @@
 		<if test="keyword != null">
 			and name like #{keyword}
 		</if>
-		<if test="categoryIdList != null">
+		<if test="categoryIds != null">
 			and category_id in
 			<foreach item="item" index="index" open="(" separator=","
 				close=")" collection="categoryIds">

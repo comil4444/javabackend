@@ -70,7 +70,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public ServerResponse<List<Integer>> fetchDeepChildCategory(Integer parentId) {
+	public ServerResponse<Set<Integer>> fetchDeepChildCategory(Integer parentId) {
 		if(parentId<0)
 			return ServerResponse.createErrorResponseByCode(ResponseCode.ILLEGAL_PARAM);
 		Set<Category> categories = new HashSet<Category>();
